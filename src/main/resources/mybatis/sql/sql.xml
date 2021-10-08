@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--
+    namespace
+    : Mapper의 전체 경로를 적는다.
+
+    id
+    : Mapper 인터페이스와 XML파일을 매칭 시키기 위해서 매퍼 인터페이스의 메소드 명과 XML 파일의 id를 동일하게 작성해줘야 한다.
+
+    resultType
+    : SQL문을 실행하고 결과값을 어떤 형식으로 반환할지를 나타낸다. 여기서는 BoardDto 객체로 반환
+ -->
+
+<mapper namespace="com.example.board.mapper.BoardMapper">
+    <!-- 총 게시글 갯수 출력 -->
+    <select id="countBoard" resultType="int">
+        SELECT COUNT (*) FROM T_BOARD
+    </select>
+    <!-- 페이징 처리 후 게시글 조회 -->
+<!--    <select id="selectBoardList" resultType="com.example.board.dto.BoardDto">-->
+<!--        <![CDATA[-->
+<!--            SELECT-->
+<!--                BOARD_SEQ,-->
+<!--                TITLE,-->
+<!--                CONTENTS,-->
+<!--                DATE_FORMAT(REG_DATE, '%Y-%m-%d %H:%i') as REG_DATE-->
+<!--            FROM-->
+<!--                T_BOARD-->
+<!--            ORDER BY BOARD_SEQ DESC-->
+<!--        ]]>-->
+<!--  </select>-->
+
+    <select id="selectBoardList" resultType="com.example.board.dto.BoardDto">
+        <![CDATA[
+        SELECT
+            BOARD_SEQ,
+            TITLE,
+            CONTENTS,
+            DATE_FORMAT(REG_DATE, '%Y-%m-%d %H:%i') as REG_DATE
+        FROM
+             T_BOARD
+        ORDER BY BOARD_SEQ DESC
+        LIMIT #{pageStart}, #{perPageNum};
+        ]]>
+  </select>
+
+
+    <insert id="boardWrite" parameterType="com.example.board.dto.BoardDto" useGeneratedKeys="true" keyProperty="boardSeq">
+        INSERT INTO T_BOARD
+        (
+            TITLE,
+            CONTENTS,
+            REG_DATE
+        )
+        VALUES
+            (
+                #{title},
+                #{contents},
+                NOW()
+            )
+    </insert>
+
+    <select id="boardRead" resultType="com.example.board.dto.BoardDto">
+        SELECT
+               BOARD_SEQ,
+               TITLE,
+               CONTENTS,
+               DATE_FORMAT(REG_DATE, '%Y-%m-%d %H:%i') as REG_DATE
+        FROM T_BOARD
+        WHERE BOARD_SEQ = #{boardSeq}
+    </select>
+
+    <update id="boardModify" parameterType="com.example.board.dto.BoardDto">
+        UPDATE T_BOARD
+        SET TITLE = #{title},
+            CONTENTS = #{contents},
+            REG_DATE = NOW()
+        WHERE BOARD_SEQ = #{boardSeq}
+    </update>
+    <delete id="boardDelete" parameterType="int">
+        DELETE FROM T_BOARD
+        WHERE BOARD_SEQ = #{boardSeq}
+    </delete>
+</mapper>
