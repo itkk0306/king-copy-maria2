@@ -136,6 +136,11 @@
       <!--end::Wrapper-->
       <!--begin::Button-->
       <a href="#" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#kt_modal_create_app" id="kt_toolbar_primary_button">Create</a>
+
+      <div class="me-2" methods="post">
+        <button type="button" class="btn btn-sm btn-primary" onclick="location.href='./SignUpForm'">회원가입</button>
+        <a href=/SignUpForm class="btn btn-sm btn-primary" >로그인</a>
+      </div>
       <!--end::Button-->
     </div>
     <!--end::Actions-->
